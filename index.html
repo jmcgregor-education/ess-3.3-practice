@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit 3.3 Practice: Fossils, Correlation &amp; Time</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --surface-2:#eef2f1; --line:#d5dad8;
+  --ink:#1f2a33; --muted:#5d6872;
+  --teal:#137a71; --teal-soft:#e2f1ef; --gold:#94660a; --gold-soft:#fbf5e6; --ember:#b5461f; --ember-soft:#fbefe9;
+  --serif:"Fraunces", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:1.0625rem;line-height:1.55}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+header.top{background:#efe9dc;border-bottom:1px solid var(--line)}
+.top-inner{max-width:64rem;margin:0 auto;padding:1.75rem 1.25rem 0}
+.course{color:var(--muted);font-size:.95rem;margin:0 0 .35rem}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,4.4vw,2.8rem);line-height:1.08;margin:0 0 .6rem}
+.sub{max-width:44rem;margin:0 0 1.1rem;color:#33414c}
+nav.tabs{display:flex;gap:.25rem;overflow-x:auto;margin:0 -1.25rem;padding:0 1.25rem}
+.tab{border:1px solid transparent;border-bottom:none;background:none;color:var(--muted);padding:.6rem .9rem;border-radius:8px 8px 0 0;white-space:nowrap;font-size:.95rem}
+.tab[aria-selected="true"]{background:var(--bg);color:var(--ink);border-color:var(--line);font-weight:600}
+.tab .done{color:var(--teal);margin-left:.3rem}
+
+main{max-width:64rem;margin:0 auto;padding:1.75rem 1.25rem 4rem}
+.round[hidden]{display:none}
+h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.45rem,3vw,1.9rem);line-height:1.15;margin:0 0 .5rem}
+.intro{max-width:44rem;margin:0 0 1.25rem}
+.how{font-size:.93rem;color:var(--muted);margin:-.75rem 0 1.25rem}
+
+.tray{display:flex;flex-wrap:wrap;gap:.5rem;padding:.9rem;background:var(--surface-2);border-radius:10px;min-height:4rem;margin-bottom:1rem}
+.tray:empty::after{content:"All cards placed. Press Check.";color:var(--muted);font-size:.93rem;align-self:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.55rem .75rem;text-align:left;font-size:.95rem;line-height:1.35;max-width:20rem}
+.card:hover{border-color:var(--teal)}
+.card.picked{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.card.locked{border-color:var(--teal);background:var(--teal-soft);cursor:default}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.75rem}
+.bin{background:var(--surface);border:2px dashed var(--line);border-radius:10px;padding:.75rem;min-height:8rem;display:flex;flex-direction:column;gap:.45rem;text-align:left;width:100%}
+.bin.armed{border-color:var(--gold)}
+.bin .hd{font-weight:600;font-family:var(--serif);font-size:1.05rem}
+.bin .hd span{display:block;font-family:var(--sans);font-weight:400;font-size:.85rem;color:var(--muted)}
+.bin .card{max-width:none}
+
+.bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1.1rem 0}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.5rem .95rem;font-size:.96rem}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
+.btn.primary:hover{background:#0f6159}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.status{font-size:.95rem;color:var(--muted)}
+.review{border-radius:10px;padding:.85rem 1.1rem;margin:.5rem 0 1rem}
+.review.no{background:var(--ember-soft);border:1px solid var(--ember)}
+.review.ok{background:var(--teal-soft);border:1px solid var(--teal)}
+.review ul{margin:.35rem 0 0;padding-left:1.15rem}
+.review li{margin-bottom:.35rem}
+
+/* order rounds */
+.slots{display:flex;flex-direction:column;gap:.35rem;max-width:30rem}
+.slot{display:flex;align-items:center;gap:.7rem;min-height:2.9rem;border:2px dashed var(--line);border-radius:8px;padding:.35rem .7rem;background:var(--surface);text-align:left;width:100%}
+.slot .n{font-size:.82rem;color:var(--muted);min-width:5.2rem}
+.slot.filled{border-style:solid}
+.slot.locked{border-color:var(--teal);background:var(--teal-soft);cursor:default}
+.slot.armed{border-color:var(--gold)}
+.edge{font-size:.85rem;color:var(--muted);margin:.25rem 0}
+
+/* correlation puzzles */
+.puz{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem 1.15rem;margin:0 0 1rem}
+.puz h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin:0 0 .4rem}
+.puz p{margin:0 0 .6rem}
+.puz-body{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:1rem;align-items:start}
+@media (max-width:700px){.puz-body{grid-template-columns:minmax(0,1fr)}}
+.puz svg{display:block;width:100%;max-width:340px;height:auto}
+.puz .hit{fill:transparent;cursor:pointer}
+.puz .hit:hover{fill:rgba(19,122,113,.14)}
+.puz .hit.right{fill:rgba(19,122,113,.25);stroke:#137a71;stroke-width:3}
+.puz .hit.wrong{fill:rgba(181,70,31,.2)}
+.puz .fb{font-size:.96rem;margin:.6rem 0 0}
+.legend{font-size:.85rem;color:var(--muted)}
+
+/* finish */
+.finish{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.25rem}
+.finish table{border-collapse:collapse;width:100%;max-width:34rem;margin:.75rem 0}
+.finish td,.finish th{padding:.4rem .5rem;border-bottom:1px solid var(--line);text-align:left}
+.finish td.n,.finish th.n{text-align:right}
+.namebox{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;margin:.5rem 0 1rem}
+.namebox input{font:inherit;padding:.45rem .65rem;border:1px solid var(--line);border-radius:6px;min-width:15rem}
+@media print{
+  @page{margin:.6in}
+  header.top,.round:not(#r-finish),.no-print{display:none!important}
+  #r-finish{display:block!important}
+  body{background:#fff}
+  .namebox input{border:none;border-bottom:1px solid #999;border-radius:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <p class="course">Earth Systems Science, Unit 3.3 Practice</p>
+    <h1>Fossils, Correlation &amp; Time</h1>
+    <p class="sub">Five quick rounds to practice what you learned in the notes and the lab. Retry as many times as you need. Every card you get right on the first try counts toward your accuracy at the end.</p>
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Practice rounds"></nav>
+  </div>
+</header>
+<main id="main"></main>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= CONTENT ================= */
+var ROUNDS = [
+ {id:"r1", type:"sort", tab:"1. Preservation",
+  title:"Round 1: How was it preserved?",
+  intro:"Sort each fossil by the way it was preserved.",
+  bins:[{id:"act",name:"Actual preservation",sub:"Original material survives"},{id:"perm",name:"Permineralization",sub:"Minerals fill the spaces"},{id:"mold",name:"Molds & casts",sub:"An empty shape, or its filling"},{id:"carb",name:"Carbonization",sub:"A thin film of carbon"},{id:"trace",name:"Trace fossils",sub:"Evidence of activity"}],
+  cards:[
+   {t:"A mosquito trapped in hardened tree resin (amber)",b:"act",w:"The insect’s original body is still there, sealed in amber."},
+   {t:"Mammoth hair and skin frozen in Arctic soil",b:"act",w:"Freezing kept the original tissue from decaying."},
+   {t:"Petrified wood where you can still count the tree rings",b:"perm",w:"Minerals filled the wood’s cells, keeping fine details like rings."},
+   {t:"A dinosaur bone whose tiny pores are filled with quartz",b:"perm",w:"Minerals carried by groundwater filled the bone’s pores."},
+   {t:"A clam-shaped hollow in sandstone, with no shell inside",b:"mold",w:"The shell dissolved and left an empty space with its shape. That’s a mold."},
+   {t:"Rock in the outside shape of a snail, formed when sediment filled a hollow",b:"mold",w:"Sediment filling a mold makes a cast."},
+   {t:"A fern that looks like a thin black film on shale",b:"carb",w:"Pressure squeezed out everything but a film of carbon."},
+   {t:"Dinosaur footprints in limestone near Glen Rose, Texas",b:"trace",w:"Footprints record what the animal did, not its body."},
+   {t:"Fossilized burrows left by worms in ancient mud",b:"trace",w:"Burrows are evidence of activity, so they’re trace fossils."},
+   {t:"A coprolite (fossilized dung) with fish scales inside",b:"trace",w:"Coprolites are trace fossils. They can even show what an animal ate."}
+  ]},
+ {id:"r2", type:"sort", tab:"2. Index fossils",
+  title:"Round 2: Good index fossil or not?",
+  intro:"A good index fossil is widespread, short-lived as a species, and easy to preserve. Sort each species by whether it would work, and if not, why not.",
+  bins:[{id:"good",name:"Good index fossil",sub:"Would work well"},{id:"long",name:"Poor: lasted too long",sub:"Only gives a huge time window"},{id:"local",name:"Poor: not widespread",sub:"Can’t match layers in other places"},{id:"soft",name:"Poor: rarely fossilizes",sub:"Won’t show up in the rocks"}],
+  cards:[
+   {t:"A tiny shelled plankton found in ocean sediments worldwide. The species lasted about 1 million years.",b:"good",w:"Widespread, short-lived, and it has a hard shell. A great index fossil."},
+   {t:"An ammonite species with a hard shell, found in marine rocks on several continents. It lasted about 2 million years.",b:"good",w:"Widespread and short-lived with a shell that preserves well."},
+   {t:"A graptolite species that drifted in oceans around the world for a short time",b:"good",w:"Graptolites are classic index fossils: widespread and short-lived."},
+   {t:"Crinoids, which lived from the Ordovician Period to today",b:"long",w:"Hundreds of millions of years is far too long to pin down a layer’s age."},
+   {t:"A brachiopod group that stayed almost unchanged for 500 million years",b:"long",w:"Finding it only tells you the rock is somewhere in a 500-million-year window."},
+   {t:"A snail species with a hard shell, found only in one lake basin",b:"local",w:"It may preserve well, but you can’t use it to match layers anywhere else."},
+   {t:"A lizard species that lived on a single island for about 1 million years",b:"local",w:"It’s short-lived, but it only lived in one place."},
+   {t:"A jellyfish species that drifted in oceans worldwide for about 1 million years",b:"soft",w:"Widespread and short-lived, but jellyfish have no hard parts, so they almost never fossilize."},
+   {t:"A soft-bodied worm found worldwide",b:"soft",w:"With no hard parts, it would rarely leave a body fossil."}
+  ]},
+ {id:"r3", type:"puzzle", tab:"3. Correlation",
+  title:"Round 3: Find the match",
+  intro:"Each puzzle shows two sites. Find the layer at Site Y that formed at the same time as the gold-outlined layer at Site X. If no layer at Site Y can be matched with confidence, say so.",
+  puzzles:[]},
+ {id:"r4", type:"sort", tab:"4. Time units",
+  title:"Round 4: Eon, era, period, or epoch?",
+  intro:"Sort each name into the level of the geologic time scale it belongs to.",
+  bins:[{id:"eon",name:"Eon",sub:"Largest"},{id:"era",name:"Era",sub:""},{id:"per",name:"Period",sub:""},{id:"epo",name:"Epoch",sub:"Smaller"}],
+  cards:[
+   {t:"Phanerozoic",b:"eon",w:"The Phanerozoic is the eon of “visible life,” the last ~539 million years."},
+   {t:"Archean",b:"eon",w:"The Archean is one of the three Precambrian eons."},
+   {t:"Proterozoic",b:"eon",w:"The Proterozoic is the eon just before the Phanerozoic."},
+   {t:"Paleozoic",b:"era",w:"The Paleozoic is the first era of the Phanerozoic Eon."},
+   {t:"Mesozoic",b:"era",w:"The Mesozoic is the middle era of the Phanerozoic."},
+   {t:"Cenozoic",b:"era",w:"The Cenozoic is the era we live in now."},
+   {t:"Cambrian",b:"per",w:"The Cambrian is the first period of the Paleozoic Era."},
+   {t:"Jurassic",b:"per",w:"The Jurassic is a period in the Mesozoic Era."},
+   {t:"Permian",b:"per",w:"The Permian is the last period of the Paleozoic. Texas’s Permian Basin is named for it."},
+   {t:"Pleistocene",b:"epo",w:"The Pleistocene is an epoch of the Quaternary Period, known for its ice ages."},
+   {t:"Holocene",b:"epo",w:"The Holocene is the epoch we live in now."}
+  ]},
+ {id:"r5", type:"order", tab:"5. In order",
+  title:"Round 5: Oldest to youngest",
+  intro:"Put these Phanerozoic periods in order, with the oldest at the bottom. Think about the fossils you saw in each one.",
+  items:[
+   {t:"Cambrian",w:"The Cambrian starts the Phanerozoic, when animals with hard parts become common."},
+   {t:"Ordovician",w:"The Ordovician comes right after the Cambrian."},
+   {t:"Devonian",w:"The Devonian, the “age of fishes,” is in the middle of the Paleozoic."},
+   {t:"Permian",w:"The Permian closes the Paleozoic Era."},
+   {t:"Jurassic",w:"The Jurassic is in the middle of the Mesozoic Era."},
+   {t:"Cretaceous",w:"The Cretaceous ends the Mesozoic, with the extinction of the non-bird dinosaurs."},
+   {t:"Quaternary",w:"The Quaternary is the most recent period, including today."}
+  ]}
+];
+
+/* Correlation puzzles. Layers bottom->top. f = fossil icon, rock, mark = gold target, unc = eroded surface on top */
+var PUZ = [
+ {title:"Puzzle A",
+  X:[{rock:"shale",f:"grap"},{rock:"shale",f:"tri",mark:true},{rock:"lime",f:"brach"}],
+  Y:[{rock:"sand",f:"grap"},{rock:"sand",f:"tri"},{rock:"shale",f:"fus"}],
+  ans:1, why:"The trilobite zone is shale at Site X but sandstone at Site Y. Same fossils, same time. The rock type changed because the environment was different."},
+ {title:"Puzzle B",
+  X:[{rock:"lime",f:"brach"},{rock:"lime",f:"fus",mark:true},{rock:"shale",f:"amm"}],
+  Y:[{rock:"lime",f:"brach",unc:true},{rock:"shale",f:"amm"}],
+  ans:-1, why:"Site Y has no fusulinid layer. The wavy eroded surface shows that this time’s rock was removed or never deposited there."},
+ {title:"Puzzle C",
+  X:[{rock:"shale",f:"amm"},{rock:"ash",f:null,mark:true},{rock:"shale",f:"scaph"}],
+  Y:[{rock:"ash",f:null},{rock:"lime",f:"amm"},{rock:"ash",f:null},{rock:"sand",f:"scaph"}],
+  ans:2, why:"The target ash sits between the coiled ammonites and the hooked Scaphites. At Site Y, only the upper ash is in that position. The lower ash came from an older eruption."},
+ {title:"Puzzle D",
+  X:[{rock:"lime",f:"tri"},{rock:"lime",f:"crin",mark:true},{rock:"sand",f:null}],
+  Y:[{rock:"lime",f:"crin"},{rock:"shale",f:"crin"},{rock:"lime",f:"crin"}],
+  ans:-1, why:"The target layer only has crinoids, which lived for hundreds of millions of years. Every layer at Site Y has crinoids too, so there’s no way to tell which one is the same age."}
+];
+ROUNDS[2].puzzles = PUZ;
+
+/* ================= HELPERS ================= */
+function $(s, r){ return (r||document).querySelector(s); }
+function shuffle(a){ a = a.slice(); for (var i = a.length-1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+function icon(kind, cx, cy, sc){
+  sc = sc || 1;
+  var t = "translate("+cx+" "+cy+") scale("+sc+")";
+  var st = 'fill="none" stroke="#1f2a33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  switch(kind){
+    case "tri": return '<g transform="'+t+'" '+st+'><path d="M-8 -6 Q0 -10 8 -6 L7 6 Q0 9 -7 6 Z"/><path d="M-3 -7 V7 M3 -7 V7"/><path d="M-7 -1 H7 M-7 3 H7"/></g>';
+    case "grap": return '<g transform="'+t+'" '+st+'><path d="M-11 4 L11 -4"/><path d="M-8 3 l1 -4 l2 3 M-3 1 l1 -4 l2 3 M2 -1 l1 -4 l2 3 M7 -3 l1 -4 l2 3"/></g>';
+    case "brach": return '<g transform="'+t+'" '+st+'><path d="M-12 3 Q-6 -8 0 -8 Q6 -8 12 3 Q0 6 -12 3 Z"/><path d="M0 -8 V5 M-5 -6 L-6 4 M5 -6 L6 4"/></g>';
+    case "fus": return '<g transform="'+t+'" '+st+'><ellipse rx="10" ry="4"/><path d="M-6 -3 Q-7 0 -6 3 M-2 -4 Q-3 0 -2 4 M2 -4 Q3 0 2 4 M6 -3 Q7 0 6 3"/></g>';
+    case "amm": return '<g transform="'+t+'" '+st+'><path d="M-1.5 0 a1.5 1.5 0 0 1 3 0 a3 3 0 0 1 -6 0 a4.5 4.5 0 0 1 9 0 a6 6 0 0 1 -12 0 a7.5 7.5 0 0 1 15 0"/></g>';
+    case "scaph": return '<g transform="'+t+'" '+st+'><path d="M-6 2 a1.3 1.3 0 0 1 2.6 0 a2.6 2.6 0 0 1 -5.2 0 a3.9 3.9 0 0 1 7.8 0 a5.2 5.2 0 0 1 -10.4 0"/><path d="M-0.8 2 C-0.8 -8 10 -9 10 -1 C10 4 6 5 5 3"/></g>';
+    case "crin": return '<g transform="'+t+'" '+st+'><path d="M-9 -2.5 H9 V2.5 H-9 Z"/><path d="M-5 -2.5 V2.5 M-1 -2.5 V2.5 M3 -2.5 V2.5 M7 -2.5 V2.5"/></g>';
+  }
+  return "";
+}
+var DEFS = '<defs>'+
+  '<pattern id="pSand" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#d6b97f"/><circle cx="2" cy="2" r=".9" fill="#94763f"/><circle cx="6" cy="6" r=".9" fill="#94763f"/></pattern>'+
+  '<pattern id="pShale" width="10" height="6" patternUnits="userSpaceOnUse"><rect width="10" height="6" fill="#8aa1ad"/><line x1="0" y1="3" x2="10" y2="3" stroke="#647b87" stroke-width="1"/></pattern>'+
+  '<pattern id="pLime" width="16" height="10" patternUnits="userSpaceOnUse"><rect width="16" height="10" fill="#b4c4b3"/><path d="M0 0 H16 M0 5 H16 M8 0 V5 M0 5 V10" stroke="#869a86" stroke-width="1"/></pattern>'+
+  '<pattern id="pAsh" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#ece8e0"/><circle cx="1.5" cy="1.5" r=".8" fill="#80858b"/><circle cx="4.5" cy="4.5" r=".8" fill="#80858b"/></pattern>'+
+  '</defs>';
+var FILL = {sand:"url(#pSand)", shale:"url(#pShale)", lime:"url(#pLime)", ash:"url(#pAsh)"};
+
+/* ================= STATE ================= */
+// per-card first-try tracking: stats[roundId] = {total, first}
+var stats = {};
+var state = {};
+
+/* ================= TABS & SHELL ================= */
+var tabs = $("#tabs"), main = $("#main");
+var ALL = ROUNDS.concat([{id:"r-finish", tab:"Finish"}]);
+tabs.innerHTML = ALL.map(function(r, i){ return '<button class="tab" role="tab" data-r="'+r.id+'" aria-selected="'+(i===0)+'">'+r.tab+'</button>'; }).join("");
+function go(id){
+  tabs.querySelectorAll(".tab").forEach(function(t){ t.setAttribute("aria-selected", t.dataset.r === id ? "true":"false"); });
+  main.querySelectorAll(".round").forEach(function(s){ s.hidden = s.id !== id; });
+  if (id === "r-finish") renderFinish();
+  window.scrollTo(0, 0);
+}
+tabs.addEventListener("click", function(e){ var t = e.target.closest(".tab"); if (t) go(t.dataset.r); });
+function markDone(id){
+  var t = tabs.querySelector('[data-r="'+id+'"]');
+  if (!t.querySelector(".done")) t.insertAdjacentHTML("beforeend", '<span class="done" aria-label="finished">✓</span>');
+}
+function nextBtn(i){
+  var nxt = ALL[i+1];
+  return '<button class="btn primary" data-go="'+nxt.id+'">'+(nxt.id==="r-finish" ? "See my results" : "Next round")+'</button>';
+}
+main.addEventListener("click", function(e){ var b = e.target.closest("[data-go]"); if (b) go(b.dataset.go); });
+
+/* ================= SORT ROUNDS ================= */
+function buildSort(R, idx){
+  var sec = document.createElement("section");
+  sec.className = "round"; sec.id = R.id; sec.hidden = idx !== 0;
+  sec.innerHTML = '<h2>'+R.title+'</h2><p class="intro">'+R.intro+'</p><p class="how">Select a card, then select the box where it belongs. Select a placed card to send it back.</p>'+
+    '<div class="tray"></div><div class="bins">'+R.bins.map(function(b){ return '<div class="bin" data-bin="'+b.id+'" role="button" tabindex="0"><div class="hd">'+b.name+(b.sub?'<span>'+b.sub+'</span>':'')+'</div></div>'; }).join("")+'</div>'+
+    '<div class="bar"><button class="btn primary chk">Check</button><button class="btn rst">Reset round</button><span class="status"></span></div><div class="rev"></div>';
+  main.appendChild(sec);
+  var st = state[R.id] = {place:{}, locked:{}, tries:{}, picked:null, order:shuffle(R.cards.map(function(_, i){ return i; })), done:false};
+  stats[R.id] = {total:R.cards.length, first:0, label:R.tab};
+  function cardHtml(i, where){
+    var c = R.cards[i], cls = "card"+(st.picked===i?" picked":"")+(st.locked[i]?" locked":"");
+    return '<button class="'+cls+'" data-c="'+i+'"'+(st.locked[i]?' aria-disabled="true"':'')+'>'+esc(c.t)+'</button>';
+  }
+  function render(){
+    $(".tray", sec).innerHTML = st.order.filter(function(i){ return st.place[i] == null; }).map(function(i){ return cardHtml(i); }).join("");
+    sec.querySelectorAll(".bin").forEach(function(b){
+      b.querySelectorAll(".card").forEach(function(c){ c.remove(); });
+      b.classList.toggle("armed", st.picked != null);
+      st.order.forEach(function(i){ if (st.place[i] === b.dataset.bin) b.insertAdjacentHTML("beforeend", cardHtml(i)); });
+    });
+  }
+  sec.addEventListener("click", function(e){
+    if (st.done && !e.target.closest(".rst")) { if (!e.target.closest("[data-go]")) return; }
+    var c = e.target.closest(".card");
+    var inBin = c && c.closest(".bin");
+    if (inBin && st.picked != null && +c.dataset.c !== st.picked){ st.place[st.picked] = inBin.dataset.bin; st.picked = null; render(); return; }
+    if (c){
+      var i = +c.dataset.c;
+      if (st.locked[i]) return;
+      if (st.place[i] != null && st.picked == null){ delete st.place[i]; render(); return; }
+      st.picked = st.picked === i ? null : i; render(); return;
+    }
+    var b = e.target.closest(".bin");
+    if (b && st.picked != null){ st.place[st.picked] = b.dataset.bin; st.picked = null; render(); }
+  });
+  sec.addEventListener("keydown", function(e){
+    var b = e.target.closest(".bin");
+    if (b && (e.key === "Enter" || e.key === " ") && e.target === b && st.picked != null){ e.preventDefault(); st.place[st.picked] = b.dataset.bin; st.picked = null; render(); }
+  });
+  $(".chk", sec).addEventListener("click", function(){
+    if (st.done) return;
+    var unplaced = R.cards.filter(function(_, i){ return st.place[i] == null; }).length;
+    if (unplaced){ $(".status", sec).textContent = "Place all "+R.cards.length+" cards first ("+unplaced+" left)."; return; }
+    var wrong = [];
+    R.cards.forEach(function(c, i){
+      if (st.locked[i]) return;
+      st.tries[i] = (st.tries[i]||0) + 1;
+      if (st.place[i] === c.b){ st.locked[i] = true; if (st.tries[i] === 1) stats[R.id].first++; }
+      else { wrong.push(i); delete st.place[i]; }
+    });
+    render();
+    if (!wrong.length){
+      st.done = true; markDone(R.id);
+      $(".status", sec).textContent = "";
+      $(".rev", sec).innerHTML = '<div class="review ok"><strong>Round complete.</strong> You got '+stats[R.id].first+' of '+R.cards.length+' right on the first try.</div><div class="bar">'+nextBtn(idx)+'</div>';
+    } else {
+      $(".status", sec).textContent = Object.keys(st.locked).length+" of "+R.cards.length+" correct. Correct cards are locked in.";
+      $(".rev", sec).innerHTML = '<div class="review no"><strong>These went back to the tray:</strong><ul>'+wrong.map(function(i){ return '<li><em>'+esc(R.cards[i].t)+'</em>. Hint: '+hintFor(R, i)+'</li>'; }).join("")+'</ul></div>';
+    }
+  });
+  $(".rst", sec).addEventListener("click", function(){
+    st.place = {}; st.locked = {}; st.picked = null; st.order = shuffle(st.order); st.done = false;
+    $(".rev", sec).innerHTML = ""; $(".status", sec).textContent = "Round reset. Your first-try count from before still stands.";
+    render();
+  });
+  render();
+}
+// Hints point toward the answer without naming the bin outright
+function hintFor(R, i){
+  var b = R.cards[i].b;
+  var H = {
+    act:"Is any of the organism’s original material still there?",
+    perm:"Think about what fills the tiny spaces inside hard parts.",
+    mold:"Is this an empty shape, or something that filled an empty shape?",
+    carb:"What’s left when pressure squeezes out everything but carbon?",
+    trace:"Is this the animal’s body, or evidence of something it did?",
+    good:"Check all three traits: widespread, short-lived, hard parts.",
+    long:"How long did it exist? Would it narrow down a layer’s age?",
+    local:"Could you find it in rocks far away from where it lived?",
+    soft:"Does it have hard parts that would survive burial?",
+    eon:"Is this one of the four biggest divisions of Earth’s history?",
+    era:"Is this one of the three big divisions of the Phanerozoic?",
+    per:"Does this name split an era into smaller pieces?",
+    epo:"Is this one of the smaller pieces of a period?"
+  };
+  return H[b] || "Reread the card carefully.";
+}
+
+/* ================= PUZZLE ROUND ================= */
+function puzzleSvg(P, pi){
+  var W = 340, colW = 90, xX = 30, xY = 220, lh = 46, gap = 0;
+  var hX = P.X.length*lh, hY = P.Y.length*lh, H = Math.max(hX, hY) + 50;
+  var h = DEFS.replace(/id="p/g, 'id="q'+pi).replace(/url\(#p/g, 'url(#q'+pi);
+  var fill = {}; Object.keys(FILL).forEach(function(k){ fill[k] = FILL[k].replace("#p", "#q"+pi); });
+  function col(L, x, side){
+    var base = H - 10, s = "";
+    L.forEach(function(l, li){
+      var y1 = base - li*lh, y0 = y1 - lh;
+      s += '<rect x="'+x+'" y="'+y0+'" width="'+colW+'" height="'+lh+'" fill="'+fill[l.rock]+'" stroke="#1f2a33" stroke-width=".8"/>';
+      if (l.f) s += icon(l.f, x+colW/2, y0+lh/2, 1.1);
+      if (l.unc) s += '<path d="M'+x+' '+y0+' q11.25 -6 22.5 0 t22.5 0 t22.5 0 t22.5 0" fill="none" stroke="#b5461f" stroke-width="2.6"/>';
+      if (l.mark) s += '<rect x="'+(x-3)+'" y="'+(y0+1.5)+'" width="'+(colW+6)+'" height="'+(lh-3)+'" fill="none" stroke="#94660a" stroke-width="4" rx="2"/>';
+    });
+    var top = base - L.length*lh;
+    s += '<rect x="'+x+'" y="'+top+'" width="'+colW+'" height="'+(L.length*lh)+'" fill="none" stroke="#1f2a33" stroke-width="1.3"/>';
+    s += '<text x="'+(x+colW/2)+'" y="'+(top-10)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="#1f2a33">Site '+side+'</text>';
+    if (side === "Y") L.forEach(function(l, li){ var y1 = base - li*lh; s += '<rect class="hit" data-l="'+li+'" x="'+x+'" y="'+(y1-lh)+'" width="'+colW+'" height="'+lh+'" role="button" tabindex="0" aria-label="Site Y, layer '+(li+1)+' from the bottom"/>'; });
+    return s;
+  }
+  h += col(P.X, xX, "X") + col(P.Y, xY, "Y");
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="group" aria-label="'+P.title+' columns">'+h+'</svg>';
+}
+function buildPuzzles(R, idx){
+  var sec = document.createElement("section");
+  sec.className = "round"; sec.id = R.id; sec.hidden = idx !== 0;
+  var html = '<h2>'+R.title+'</h2><p class="intro">'+R.intro+'</p>'+
+    '<p class="legend">Sandstone is dotted tan, shale is striped blue-gray, limestone is green brick, and volcanic ash is speckled white. A red wavy line is an eroded surface.</p>';
+  R.puzzles.forEach(function(P, pi){
+    html += '<div class="puz" data-p="'+pi+'"><h3>'+P.title+'</h3><div class="puz-body"><div>'+puzzleSvg(P, pi)+'</div><div><p>Select the matching layer at Site Y.</p><button class="btn nomatch">No layer at Site Y can be matched</button><p class="fb" aria-live="polite"></p></div></div></div>';
+  });
+  html += '<div class="rev"></div>';
+  sec.innerHTML = html;
+  main.appendChild(sec);
+  var st = state[R.id] = {tries:{}, done:{}};
+  stats[R.id] = {total:R.puzzles.length, first:0, label:R.tab};
+  function answer(pi, choice, el){
+    if (st.done[pi]) return;
+    var P = R.puzzles[pi], box = sec.querySelector('.puz[data-p="'+pi+'"]');
+    st.tries[pi] = (st.tries[pi]||0) + 1;
+    if (choice === P.ans){
+      st.done[pi] = true;
+      if (st.tries[pi] === 1) stats[R.id].first++;
+      if (el) el.classList.add("right");
+      box.querySelector(".nomatch").disabled = true;
+      if (choice === -1) box.querySelector(".nomatch").classList.add("primary");
+      box.querySelector(".fb").innerHTML = '<strong style="color:var(--teal)">Correct.</strong> '+P.why;
+      if (Object.keys(st.done).length === R.puzzles.length){
+        markDone(R.id);
+        $(".rev", sec).innerHTML = '<div class="review ok"><strong>Round complete.</strong> You got '+stats[R.id].first+' of '+R.puzzles.length+' right on the first try.</div><div class="bar">'+nextBtn(idx)+'</div>';
+      }
+    } else {
+      if (el) el.classList.add("wrong");
+      var hint = choice === -1 ? "One layer at Site Y can be matched. Look for the same index fossil, or an ash bed in the same position." :
+        (P.ans === -1 ? "Look closely. Does that layer really share an index fossil with the target, or just a rock type or a long-lived fossil?" : "That layer doesn’t match. Compare fossils, not rock type, and check what’s above and below.");
+      box.querySelector(".fb").innerHTML = '<strong style="color:var(--ember)">Not quite.</strong> '+hint;
+    }
+  }
+  sec.addEventListener("click", function(e){
+    var h = e.target.closest(".hit");
+    if (h){ answer(+h.closest(".puz").dataset.p, +h.dataset.l, h); return; }
+    var n = e.target.closest(".nomatch");
+    if (n) answer(+n.closest(".puz").dataset.p, -1, null);
+  });
+  sec.addEventListener("keydown", function(e){
+    var h = e.target.closest(".hit");
+    if (h && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); answer(+h.closest(".puz").dataset.p, +h.dataset.l, h); }
+  });
+}
+
+/* ================= ORDER ROUND ================= */
+function buildOrder(R, idx){
+  var sec = document.createElement("section");
+  sec.className = "round"; sec.id = R.id; sec.hidden = idx !== 0;
+  sec.innerHTML = '<h2>'+R.title+'</h2><p class="intro">'+R.intro+'</p><p class="how">Select a name, then select a slot. Select a filled slot to send its name back.</p>'+
+    '<div class="tray"></div><p class="edge">Youngest (top)</p><div class="slots"></div><p class="edge">Oldest (bottom)</p>'+
+    '<div class="bar"><button class="btn primary chk">Check</button><span class="status"></span></div><div class="rev"></div>';
+  main.appendChild(sec);
+  var n = R.items.length;
+  var st = state[R.id] = {slot:{}, locked:{}, tries:{}, picked:null, order:shuffle(R.items.map(function(_, i){ return i; })), done:false};
+  stats[R.id] = {total:n, first:0, label:R.tab};
+  function render(){
+    var placed = {}; Object.keys(st.slot).forEach(function(s){ placed[st.slot[s]] = true; });
+    $(".tray", sec).innerHTML = st.order.filter(function(i){ return !placed[i]; }).map(function(i){
+      return '<button class="card'+(st.picked===i?" picked":"")+'" data-c="'+i+'">'+R.items[i].t+'</button>'; }).join("");
+    var h = "";
+    for (var s = n-1; s >= 0; s--){
+      var it = st.slot[s];
+      h += '<button class="slot'+(it!=null?" filled":"")+(st.locked[s]?" locked":"")+(st.picked!=null&&!st.locked[s]?" armed":"")+'" data-s="'+s+'"><span class="n">'+(s+1)+(s===0?" (oldest)":s===n-1?" (youngest)":"")+'</span><span>'+(it!=null?R.items[it].t:'<span style="color:var(--muted)">Empty</span>')+'</span></button>';
+    }
+    $(".slots", sec).innerHTML = h;
+  }
+  sec.addEventListener("click", function(e){
+    if (st.done) return;
+    var c = e.target.closest(".tray .card");
+    if (c){ var i = +c.dataset.c; st.picked = st.picked === i ? null : i; render(); return; }
+    var sl = e.target.closest(".slot");
+    if (sl){
+      var s = +sl.dataset.s; if (st.locked[s]) return;
+      if (st.picked != null){ st.slot[s] = st.picked; st.picked = null; }
+      else if (st.slot[s] != null){ delete st.slot[s]; }
+      render();
+    }
+  });
+  $(".chk", sec).addEventListener("click", function(){
+    if (st.done) return;
+    if (Object.keys(st.slot).length < n){ $(".status", sec).textContent = "Fill all "+n+" slots first."; return; }
+    var wrong = [];
+    for (var s = 0; s < n; s++){
+      if (st.locked[s]) continue;
+      st.tries[s] = (st.tries[s]||0) + 1;
+      if (st.slot[s] === s){ st.locked[s] = true; if (st.tries[s] === 1) stats[R.id].first++; }
+      else { wrong.push(st.slot[s]); delete st.slot[s]; }
+    }
+    render();
+    if (!wrong.length){
+      st.done = true; markDone(R.id); $(".status", sec).textContent = "";
+      $(".rev", sec).innerHTML = '<div class="review ok"><strong>Round complete.</strong> You got '+stats[R.id].first+' of '+n+' slots right on the first try.</div><div class="bar">'+nextBtn(idx)+'</div>';
+    } else {
+      $(".status", sec).textContent = Object.keys(st.locked).length+" of "+n+" in the right spot. Those are locked in.";
+      $(".rev", sec).innerHTML = '<div class="review no"><strong>Back to the tray:</strong><ul>'+wrong.map(function(i){ return '<li><strong>'+R.items[i].t+'</strong>. Hint: '+R.items[i].w+'</li>'; }).join("")+'</ul></div>';
+    }
+  });
+  render();
+}
+
+/* ================= FINISH ================= */
+var fin = document.createElement("section");
+fin.className = "round"; fin.id = "r-finish"; fin.hidden = true;
+fin.innerHTML = '<h2>Your results</h2><div class="finish"><div class="namebox"><label for="nm"><strong>Name</strong></label><input id="nm" type="text" autocomplete="name"></div><p id="fin-msg"></p><table id="fin-t"></table><div class="bar no-print"><button class="btn primary" id="fin-print">Print or save as PDF</button><button class="btn" id="fin-again">Practice again</button></div></div>';
+main.appendChild(fin);
+function renderFinish(){
+  var tot = 0, first = 0, rows = "", allDone = true;
+  ROUNDS.forEach(function(R){
+    var s = stats[R.id], done = tabs.querySelector('[data-r="'+R.id+'"] .done');
+    if (!done) allDone = false;
+    tot += s.total; first += s.first;
+    rows += '<tr><td>'+R.title.replace(/^Round \d: /,"")+'</td><td>'+(done?"Done":"Not finished")+'</td><td class="n">'+s.first+' / '+s.total+'</td></tr>';
+  });
+  var pct = Math.round(first/tot*100);
+  $("#fin-t").innerHTML = '<tr><th>Round</th><th>Status</th><th class="n">First try</th></tr>'+rows+'<tr><td><strong>Total</strong></td><td></td><td class="n"><strong>'+first+' / '+tot+' ('+pct+'%)</strong></td></tr>';
+  $("#fin-msg").textContent = allDone ? (pct >= 80 ? "Nice work. You’ve got a solid handle on this lesson." : "You finished every round. Look back at the rounds where you missed the most on the first try, then practice again if you’d like.") : "Some rounds aren’t finished yet. Use the tabs above to go back to them.";
+}
+$("#fin-print").addEventListener("click", function(){ if (document.activeElement) document.activeElement.blur(); renderFinish(); window.print(); });
+$("#fin-again").addEventListener("click", function(){ location.reload(); });
+
+/* ================= BUILD ================= */
+ROUNDS.forEach(function(R, i){
+  if (R.type === "sort") buildSort(R, i);
+  else if (R.type === "puzzle") buildPuzzles(R, i);
+  else buildOrder(R, i);
+});
+main.appendChild(fin);
+
+window.__prac = {ROUNDS:ROUNDS, state:state, stats:stats, go:go};
+})();
+</script>
+</body>
+</html>
